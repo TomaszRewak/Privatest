@@ -66,28 +66,8 @@ namespace Microsoft.CodeAnalysis
 		ReadableWritableReference = Read | Write | Reference
 	}
 
-	internal static class ValueUsageInfoExtensions
-	{
-		public static bool IsReadFrom(this ValueUsageInfo valueUsageInfo)
-			=> (valueUsageInfo & ValueUsageInfo.Read) != 0;
-
-		public static bool IsWrittenTo(this ValueUsageInfo valueUsageInfo)
-			=> (valueUsageInfo & ValueUsageInfo.Write) != 0;
-
-		public static bool IsNameOnly(this ValueUsageInfo valueUsageInfo)
-			=> (valueUsageInfo & ValueUsageInfo.Name) != 0;
-
-		public static bool IsReference(this ValueUsageInfo valueUsageInfo)
-			=> (valueUsageInfo & ValueUsageInfo.Reference) != 0;
-	}
-
 	internal static partial class OperationExtensions
 	{
-		public static bool IsTargetOfObjectMemberInitializer(this IOperation operation)
-			=> operation.Parent is IAssignmentOperation assignmentOperation &&
-			   assignmentOperation.Target == operation &&
-			   assignmentOperation.Parent?.Kind == OperationKind.ObjectOrCollectionInitializer;
-
 		/// <summary>
 		/// Returns the <see cref="ValueUsageInfo"/> for the given operation.
 		/// This extension can be removed once https://github.com/dotnet/roslyn/issues/25057 is implemented.
