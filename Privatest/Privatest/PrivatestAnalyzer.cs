@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Privatest.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -23,8 +24,15 @@ namespace Privatest
 		private const string Category = "Naming";
 
 		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+		private static readonly DiagnosticDescriptor AttributeRule = new DiagnosticDescriptor(
+			DiagnosticId,
+			"The [This] attribute is applied on a non-private property",
+			"The [This] attribute can be applied only on private properties, but was applied on '{0}' property '{1}'",
+			"Accessibility",
+			DiagnosticSeverity.Error,
+			isEnabledByDefault: true);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule, AttributeRule); } }
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -33,10 +41,11 @@ namespace Privatest
 
 			// TODO: Consider registering other actions that act on syntax instead of or in addition to symbols
 			// See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Analyzer%20Actions%20Semantics.md for more information
-			context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);
+			context.RegisterSymbolAction(AnalyzeNamedType, SymbolKind.NamedType);
+			context.RegisterSymbolAction(AnalyzeProperty, SymbolKind.Property);
 		}
 
-		private static void AnalyzeSymbol(SymbolAnalysisContext context)
+		private static void AnalyzeNamedType(SymbolAnalysisContext context)
 		{
 			// TODO: Replace the following code with your own analysis, generating Diagnostic objects for any issues you find
 			var namedTypeSymbol = (INamedTypeSymbol)context.Symbol;
@@ -49,6 +58,17 @@ namespace Privatest
 
 				context.ReportDiagnostic(diagnostic);
 			}
+		}
+
+		private static void AnalyzeProperty(SymbolAnalysisContext context)
+		{
+			var symbol = context.Symbol;
+
+			if (!symbol.HasAttribute<ThisAttribute>()) return;
+			if (symbol.DeclaredAccessibility == Accessibility.Private) return;
+
+			var diagnostic = Diagnostic.Create(AttributeRule, symbol.Locations[0], new object[] { symbol.DeclaredAccessibility, symbol.Name });
+			context.ReportDiagnostic(diagnostic);
 		}
 	}
 }
