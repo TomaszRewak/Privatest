@@ -52,6 +52,8 @@ namespace Privatest
 			context.RegisterSymbolAction(AnalyzeNamedType, SymbolKind.NamedType);
 			context.RegisterSymbolAction(AnalyzeProperty, SymbolKind.Property);
 			context.RegisterOperationAction(AnalyzeInvocation, OperationKind.Invocation);
+			context.RegisterOperationAction(AnalyzeFieldReference, OperationKind.FieldReference);
+			context.RegisterOperationAction(AnalyzePropertyReference, OperationKind.PropertyReference);
 		}
 
 		private static void AnalyzeNamedType(SymbolAnalysisContext context)
@@ -73,8 +75,8 @@ namespace Privatest
 		{
 			var symbol = context.Symbol;
 
-			if (!symbol.HasAttribute<ThisAttribute>()) return;
 			if (symbol.DeclaredAccessibility == Accessibility.Private) return;
+			if (!symbol.HasAttribute<ThisAttribute>()) return;
 
 			var diagnostic = Diagnostic.Create(AttributeRule, symbol.Locations[0], new object[] { symbol.DeclaredAccessibility, symbol.Name });
 			context.ReportDiagnostic(diagnostic);
@@ -85,11 +87,51 @@ namespace Privatest
 			var operation = context.Operation;
 			var invocation = operation as IInvocationOperation;
 
-			if (!invocation.TargetMethod.HasAttribute<ThisAttribute>()) return;
 			if (invocation.Instance.Kind == OperationKind.InstanceReference) return;
+			if (!invocation.TargetMethod.HasAttribute<ThisAttribute>()) return;
 
 			var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
 			context.ReportDiagnostic(diagnostic);
+		}
+
+		private static void AnalyzeFieldReference(OperationAnalysisContext context)
+		{
+			var operation = context.Operation;
+			var reference = operation as IFieldReferenceOperation;
+
+			if (reference.Instance.Kind == OperationKind.InstanceReference) return;
+			if (!reference.Field.HasAttribute<ThisAttribute>()) return;
+
+			var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
+			context.ReportDiagnostic(diagnostic);
+		}
+
+		private static void AnalyzePropertyReference(OperationAnalysisContext context)
+		{
+			var operation = context.Operation;
+			var reference = operation as IPropertyReferenceOperation;
+
+			if (reference.Instance.Kind == OperationKind.InstanceReference) return;
+
+			var attributeOnProperty = reference.Property.HasAttribute<ThisAttribute>();
+			var attributeOnSetter = attributeOnProperty || (reference.Property.SetMethod?.HasAttribute<ThisAttribute>() ?? false);
+			var attributeOnGetter = attributeOnProperty || (reference.Property.GetMethod?.HasAttribute<ThisAttribute>() ?? false);
+
+			if (!attributeOnSetter && !attributeOnGetter) return;
+
+			var usage = operation.GetValueUsageInfo(context.ContainingSymbol);
+
+			if (attributeOnSetter && usage.HasFlag(ValueUsageInfo.Write))
+			{
+				var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
+				context.ReportDiagnostic(diagnostic);
+			}
+
+			if (attributeOnGetter && usage.HasFlag(ValueUsageInfo.Read))
+			{
+				var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
+				context.ReportDiagnostic(diagnostic);
+			}
 		}
 	}
 }
