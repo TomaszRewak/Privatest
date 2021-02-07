@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Operations;
 using Privatest.Extensions;
 using System;
 using System.Collections.Generic;
@@ -31,8 +32,15 @@ namespace Privatest
 			"Accessibility",
 			DiagnosticSeverity.Error,
 			isEnabledByDefault: true);
+		private static readonly DiagnosticDescriptor InvocationRule = new DiagnosticDescriptor(
+			DiagnosticId,
+			"AAA",
+			"BBB",
+			"Accessibility",
+			DiagnosticSeverity.Error,
+			isEnabledByDefault: true);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule, AttributeRule); } }
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule, AttributeRule, InvocationRule); } }
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -43,6 +51,7 @@ namespace Privatest
 			// See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Analyzer%20Actions%20Semantics.md for more information
 			context.RegisterSymbolAction(AnalyzeNamedType, SymbolKind.NamedType);
 			context.RegisterSymbolAction(AnalyzeProperty, SymbolKind.Property);
+			context.RegisterOperationAction(AnalyzeInvocation, OperationKind.Invocation);
 		}
 
 		private static void AnalyzeNamedType(SymbolAnalysisContext context)
@@ -68,6 +77,18 @@ namespace Privatest
 			if (symbol.DeclaredAccessibility == Accessibility.Private) return;
 
 			var diagnostic = Diagnostic.Create(AttributeRule, symbol.Locations[0], new object[] { symbol.DeclaredAccessibility, symbol.Name });
+			context.ReportDiagnostic(diagnostic);
+		}
+
+		private static void AnalyzeInvocation(OperationAnalysisContext context)
+		{
+			var operation = context.Operation;
+			var invocation = operation as IInvocationOperation;
+
+			if (!invocation.TargetMethod.HasAttribute<ThisAttribute>()) return;
+			if (invocation.Instance.Kind == OperationKind.InstanceReference) return;
+
+			var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
 			context.ReportDiagnostic(diagnostic);
 		}
 	}
