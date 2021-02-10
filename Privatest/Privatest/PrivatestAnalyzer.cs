@@ -17,61 +17,37 @@ namespace Privatest
 	{
 		public const string DiagnosticId = "Privatest";
 
-		// You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
-		// See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Localizing%20Analyzers.md for more on localization
-		private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
-		private const string Category = "Naming";
-
-		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 		private static readonly DiagnosticDescriptor AttributeRule = new DiagnosticDescriptor(
 			DiagnosticId,
-			"The [This] attribute is applied on a non-private property",
-			"The [This] attribute can be applied only on private properties, but was applied on '{0}' property '{1}'",
+			"[This] attribute is applied on a non-private member",
+			"[This] attribute can be applied only on private members, but was applied on '{0}' property '{1}'",
 			"Accessibility",
 			DiagnosticSeverity.Error,
 			isEnabledByDefault: true);
-		private static readonly DiagnosticDescriptor InvocationRule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor AccessibilityRule = new DiagnosticDescriptor(
 			DiagnosticId,
-			"AAA",
-			"BBB",
+			"The member is inaccesible due to its protection level",
+			"`{0}` is inaccesible due to its protection level. It can only be accessed through the `this` reference in a private scope.",
 			"Accessibility",
 			DiagnosticSeverity.Error,
 			isEnabledByDefault: true);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule, AttributeRule, InvocationRule); } }
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(AttributeRule, AccessibilityRule); } }
 
 		public override void Initialize(AnalysisContext context)
 		{
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.EnableConcurrentExecution();
 
-			// TODO: Consider registering other actions that act on syntax instead of or in addition to symbols
-			// See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Analyzer%20Actions%20Semantics.md for more information
-			context.RegisterSymbolAction(AnalyzeNamedType, SymbolKind.NamedType);
-			context.RegisterSymbolAction(AnalyzeProperty, SymbolKind.Property);
+			context.RegisterSymbolAction(AnalyzeAttributePlacement, SymbolKind.Property);
+			context.RegisterSymbolAction(AnalyzeAttributePlacement, SymbolKind.Field);
+
 			context.RegisterOperationAction(AnalyzeInvocation, OperationKind.Invocation);
 			context.RegisterOperationAction(AnalyzeFieldReference, OperationKind.FieldReference);
 			context.RegisterOperationAction(AnalyzePropertyReference, OperationKind.PropertyReference);
 		}
 
-		private static void AnalyzeNamedType(SymbolAnalysisContext context)
-		{
-			// TODO: Replace the following code with your own analysis, generating Diagnostic objects for any issues you find
-			var namedTypeSymbol = (INamedTypeSymbol)context.Symbol;
-
-			// Find just those named type symbols with names containing lowercase letters.
-			if (namedTypeSymbol.Name.ToCharArray().Any(char.IsLower))
-			{
-				// For all such symbols, produce a diagnostic.
-				var diagnostic = Diagnostic.Create(Rule, namedTypeSymbol.Locations[0], namedTypeSymbol.Name);
-
-				context.ReportDiagnostic(diagnostic);
-			}
-		}
-
-		private static void AnalyzeProperty(SymbolAnalysisContext context)
+		private static void AnalyzeAttributePlacement(SymbolAnalysisContext context)
 		{
 			var symbol = context.Symbol;
 
@@ -90,7 +66,7 @@ namespace Privatest
 			if (invocation.Instance.Kind == OperationKind.InstanceReference) return;
 			if (!invocation.TargetMethod.HasAttribute<ThisAttribute>()) return;
 
-			var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
+			var diagnostic = Diagnostic.Create(AccessibilityRule, operation.Syntax.GetLocation(), new object[] { invocation.TargetMethod.Name });
 			context.ReportDiagnostic(diagnostic);
 		}
 
@@ -102,7 +78,7 @@ namespace Privatest
 			if (reference.Instance.Kind == OperationKind.InstanceReference) return;
 			if (!reference.Field.HasAttribute<ThisAttribute>()) return;
 
-			var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
+			var diagnostic = Diagnostic.Create(AccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Field.Name });
 			context.ReportDiagnostic(diagnostic);
 		}
 
@@ -123,13 +99,13 @@ namespace Privatest
 
 			if (attributeOnSetter && usage.HasFlag(ValueUsageInfo.Write))
 			{
-				var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
+				var diagnostic = Diagnostic.Create(AccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Property.Name });
 				context.ReportDiagnostic(diagnostic);
 			}
 
 			if (attributeOnGetter && usage.HasFlag(ValueUsageInfo.Read))
 			{
-				var diagnostic = Diagnostic.Create(InvocationRule, operation.Syntax.GetLocation());
+				var diagnostic = Diagnostic.Create(AccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Property.Name });
 				context.ReportDiagnostic(diagnostic);
 			}
 		}

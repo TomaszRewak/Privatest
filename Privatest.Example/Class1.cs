@@ -2,6 +2,8 @@
 
 namespace Privatest.Example
 {
+	class C { private static int a; }
+
 	public class Class1
 	{
 		[This] public int _field;
@@ -25,6 +27,8 @@ namespace Privatest.Example
 			Method1();
 			Property1 = 4;
 			_field = 1;
+
+			C.a = 3;
 		}
 
 		private void Method3(Class1 c)
