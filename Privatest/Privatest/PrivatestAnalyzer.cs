@@ -24,15 +24,22 @@ namespace Privatest
 			"Accessibility",
 			DiagnosticSeverity.Error,
 			isEnabledByDefault: true);
-		private static readonly DiagnosticDescriptor AccessibilityRule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor ThisAccessibilityRule = new DiagnosticDescriptor(
 			DiagnosticId,
 			"The member is inaccesible due to its protection level",
 			"`{0}` is inaccesible due to its protection level. It can only be accessed through the `this` reference in a private scope.",
 			"Accessibility",
 			DiagnosticSeverity.Error,
 			isEnabledByDefault: true);
+		private static readonly DiagnosticDescriptor MemberAccessibilityRule = new DiagnosticDescriptor(
+			DiagnosticId,
+			"The member is inaccesible due to its protection level",
+			"`{0}` is inaccesible due to its protection level. It can only be accessed through the `this` reference in a `{1}` (but is used in a `{2}`).",
+			"Accessibility",
+			DiagnosticSeverity.Error,
+			isEnabledByDefault: true);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(AttributeRule, AccessibilityRule); } }
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(AttributeRule, ThisAccessibilityRule, MemberAccessibilityRule); } }
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -62,12 +69,24 @@ namespace Privatest
 		{
 			var operation = context.Operation;
 			var invocation = operation as IInvocationOperation;
+			var attribute = invocation.TargetMethod.GetAttribute<ThisAttribute>();
 
-			if (invocation.Instance.Kind == OperationKind.InstanceReference) return;
-			if (!invocation.TargetMethod.HasAttribute<ThisAttribute>()) return;
+			if (attribute == null) return;
 
-			var diagnostic = Diagnostic.Create(AccessibilityRule, operation.Syntax.GetLocation(), new object[] { invocation.TargetMethod.Name });
-			context.ReportDiagnostic(diagnostic);
+			if (invocation.Instance.Kind != OperationKind.InstanceReference)
+			{
+				context.ReportDiagnostic(Diagnostic.Create(ThisAccessibilityRule, invocation.Syntax.GetLocation(), new object[] { invocation.TargetMethod.Name }));
+				return;
+			}
+
+			if (attribute.ConstructorArguments.Length == 0) return;
+
+			var scopeName = GetScopeName(context.ContainingSymbol);
+			var targetScopeName = attribute.ConstructorArguments[0].Value as string;
+
+			if (scopeName == targetScopeName) return;
+
+			context.ReportDiagnostic(Diagnostic.Create(MemberAccessibilityRule, invocation.Syntax.GetLocation(), new object[] { invocation.TargetMethod.Name, targetScopeName, scopeName }));
 		}
 
 		private static void AnalyzeFieldReference(OperationAnalysisContext context)
@@ -78,7 +97,7 @@ namespace Privatest
 			if (reference.Instance.Kind == OperationKind.InstanceReference) return;
 			if (!reference.Field.HasAttribute<ThisAttribute>()) return;
 
-			var diagnostic = Diagnostic.Create(AccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Field.Name });
+			var diagnostic = Diagnostic.Create(ThisAccessibilityRule, reference.Syntax.GetLocation(), new object[] { reference.Field.Name });
 			context.ReportDiagnostic(diagnostic);
 		}
 
@@ -99,15 +118,26 @@ namespace Privatest
 
 			if (attributeOnSetter && usage.HasFlag(ValueUsageInfo.Write))
 			{
-				var diagnostic = Diagnostic.Create(AccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Property.Name });
+				var diagnostic = Diagnostic.Create(ThisAccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Property.Name });
 				context.ReportDiagnostic(diagnostic);
 			}
 
 			if (attributeOnGetter && usage.HasFlag(ValueUsageInfo.Read))
 			{
-				var diagnostic = Diagnostic.Create(AccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Property.Name });
+				var diagnostic = Diagnostic.Create(ThisAccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Property.Name });
 				context.ReportDiagnostic(diagnostic);
 			}
+		}
+
+		private static string GetScopeName(ISymbol symbol)
+		{
+			while (symbol != null && !(symbol.ContainingSymbol is ITypeSymbol))
+				symbol = symbol.ContainingSymbol;
+
+			if (symbol is IMethodSymbol methodSymbol)
+				return methodSymbol.AssociatedSymbol?.Name ?? symbol.Name;
+
+			return null;
 		}
 	}
 }

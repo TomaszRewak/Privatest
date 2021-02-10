@@ -25,7 +25,7 @@ namespace Privatest.Extensions
 		{
 			return type
 				.GetAttributes<T>()
-				.First();
+				.FirstOrDefault();
 		}
 
 		public static string GetFullName(this ITypeSymbol symbol)

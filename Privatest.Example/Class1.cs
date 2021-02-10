@@ -14,10 +14,24 @@ namespace Privatest.Example
 		public int FrontProperty
 		{
 			get => _backField;
-			set => _backField = value;
+			set
+			{
+				Method1();
+				_backField = value;
+			}
 		}
 
-		[This] private void Method1()
+		public int Property2
+		{
+			get
+			{
+				Method1();
+				return 2;
+			}
+		}
+
+		[This(nameof(FrontProperty))]
+		private void Method1()
 		{
 			_backField = 3;
 		}
@@ -33,6 +47,8 @@ namespace Privatest.Example
 
 		private void Method3(Class1 c)
 		{
+			Method1();
+
 			c.Method1();
 			c.Property1 = 1;
 			c._field = 3;
