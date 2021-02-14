@@ -93,12 +93,24 @@ namespace Privatest
 		{
 			var operation = context.Operation;
 			var reference = operation as IFieldReferenceOperation;
+			var attribute = reference.Field.GetAttribute<ThisAttribute>();
 
-			if (reference.Instance.Kind == OperationKind.InstanceReference) return;
-			if (!reference.Field.HasAttribute<ThisAttribute>()) return;
+			if (attribute == null) return;
 
-			var diagnostic = Diagnostic.Create(ThisAccessibilityRule, reference.Syntax.GetLocation(), new object[] { reference.Field.Name });
-			context.ReportDiagnostic(diagnostic);
+			if (reference.Instance.Kind != OperationKind.InstanceReference)
+			{
+				context.ReportDiagnostic(Diagnostic.Create(ThisAccessibilityRule, reference.Syntax.GetLocation(), new object[] { reference.Field.Name }));
+				return;
+			}
+
+			if (attribute.ConstructorArguments.Length == 0) return;
+
+			var scopeName = GetScopeName(context.ContainingSymbol);
+			var targetScopeName = attribute.ConstructorArguments[0].Value as string;
+
+			if (scopeName == targetScopeName) return;
+
+			context.ReportDiagnostic(Diagnostic.Create(MemberAccessibilityRule, reference.Syntax.GetLocation(), new object[] { reference.Field.Name, targetScopeName, scopeName }));
 		}
 
 		private static void AnalyzePropertyReference(OperationAnalysisContext context)
@@ -106,26 +118,52 @@ namespace Privatest
 			var operation = context.Operation;
 			var reference = operation as IPropertyReferenceOperation;
 
-			if (reference.Instance.Kind == OperationKind.InstanceReference) return;
+			var attributeOnProperty = reference.Property.GetAttribute<ThisAttribute>();
+			var attributeOnSetter = reference.Property.SetMethod?.GetAttribute<ThisAttribute>() ?? attributeOnProperty;
+			var attributeOnGetter = reference.Property.GetMethod?.GetAttribute<ThisAttribute>() ?? attributeOnProperty;
 
-			var attributeOnProperty = reference.Property.HasAttribute<ThisAttribute>();
-			var attributeOnSetter = attributeOnProperty || (reference.Property.SetMethod?.HasAttribute<ThisAttribute>() ?? false);
-			var attributeOnGetter = attributeOnProperty || (reference.Property.GetMethod?.HasAttribute<ThisAttribute>() ?? false);
-
-			if (!attributeOnSetter && !attributeOnGetter) return;
+			if (attributeOnSetter == null && attributeOnGetter == null) return;
 
 			var usage = operation.GetValueUsageInfo(context.ContainingSymbol);
 
-			if (attributeOnSetter && usage.HasFlag(ValueUsageInfo.Write))
+			if (attributeOnSetter != null && usage.HasFlag(ValueUsageInfo.Write))
 			{
-				var diagnostic = Diagnostic.Create(ThisAccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Property.Name });
-				context.ReportDiagnostic(diagnostic);
+				if (reference.Instance.Kind != OperationKind.InstanceReference)
+				{
+					context.ReportDiagnostic(Diagnostic.Create(ThisAccessibilityRule, reference.Syntax.GetLocation(), new object[] { reference.Property.Name }));
+					return;
+				}
+				else if (attributeOnSetter.ConstructorArguments.Length != 0)
+				{
+					var scopeName = GetScopeName(context.ContainingSymbol);
+					var targetScopeName = attributeOnSetter.ConstructorArguments[0].Value as string;
+
+					if (scopeName != targetScopeName)
+					{
+						context.ReportDiagnostic(Diagnostic.Create(MemberAccessibilityRule, reference.Syntax.GetLocation(), new object[] { reference.Property.Name, targetScopeName, scopeName }));
+						return;
+					}
+				}
 			}
 
-			if (attributeOnGetter && usage.HasFlag(ValueUsageInfo.Read))
+			if (attributeOnGetter != null && usage.HasFlag(ValueUsageInfo.Read))
 			{
-				var diagnostic = Diagnostic.Create(ThisAccessibilityRule, operation.Syntax.GetLocation(), new object[] { reference.Property.Name });
-				context.ReportDiagnostic(diagnostic);
+				if (reference.Instance.Kind != OperationKind.InstanceReference)
+				{
+					context.ReportDiagnostic(Diagnostic.Create(ThisAccessibilityRule, reference.Syntax.GetLocation(), new object[] { reference.Property.Name }));
+					return;
+				}
+				else if (attributeOnGetter.ConstructorArguments.Length != 0)
+				{
+					var scopeName = GetScopeName(context.ContainingSymbol);
+					var targetScopeName = attributeOnGetter.ConstructorArguments[0].Value as string;
+
+					if (scopeName != targetScopeName)
+					{
+						context.ReportDiagnostic(Diagnostic.Create(MemberAccessibilityRule, reference.Syntax.GetLocation(), new object[] { reference.Property.Name, targetScopeName, scopeName }));
+						return;
+					}
+				}
 			}
 		}
 
