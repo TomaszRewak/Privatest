@@ -24,8 +24,7 @@ public class Class
       _field = 10; // OK
 
       other._field = 10; // ERROR
-    //^^^^^^^^^^^^
-    //`_field` is inaccessible due to its protection level. It can only be accessed by the instance to which it belongs (through the `this` reference).
+    //^^^^^^^^^^^^ `_field` is inaccessible due to its protection level. It can only be accessed by the instance to which it belongs (through the `this` reference).
    }
 }
 ```
@@ -38,8 +37,7 @@ The `[This]` attribute can only be applied on private members.
 public class Class
 {
    [This] public int Property { get; set; }
-                   //^^^^^^^^
-                   //[This] attribute can be applied only on private members, but was applied on 'Public' member 'Property'
+                   //^^^^^^^^ [This] attribute can be applied only on private members, but was applied on 'Public' member 'Property'
 }
 ```
 
@@ -58,8 +56,7 @@ public class Class
    public void Method(Class other)
    {
       _backField = 2;
-    //^^^^^^^^^^
-    //`_backField` is inaccessible due to its protection level. It can only be accessed in `FrontProperty` (but is used in `Method`).
+    //^^^^^^^^^^ `_backField` is inaccessible due to its protection level. It can only be accessed in `FrontProperty` (but is used in `Method`).
    }
 }
 ```
