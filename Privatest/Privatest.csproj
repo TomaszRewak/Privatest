@@ -13,7 +13,7 @@
 		<PackageTags>privatest, private [this], scala, analyzer, accessibility, protection level</PackageTags>
 		<PackageReleaseNotes>1.0.0 - Initial release</PackageReleaseNotes>
 		<Description>Adding instance-level accessibility mode to C#</Description>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>Tomasz Rewak</Copyright>
 		<PackageProjectUrl>https://github.com/TomaszRewak/Privatest</PackageProjectUrl>
