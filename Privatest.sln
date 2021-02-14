@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Privatest.Package", "Privat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Privatest.Test", "Privatest\Privatest.Test\Privatest.Test.csproj", "{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Privatest.Example", "Privatest.Example\Privatest.Example.csproj", "{F48B849E-1283-4F3C-B86E-03DCA3D71A07}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F48B849E-1283-4F3C-B86E-03DCA3D71A07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F48B849E-1283-4F3C-B86E-03DCA3D71A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F48B849E-1283-4F3C-B86E-03DCA3D71A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F48B849E-1283-4F3C-B86E-03DCA3D71A07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

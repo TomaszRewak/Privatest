@@ -13,7 +13,7 @@ namespace Privatest
 		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
 			DiagnosticId,
 			"[This] attribute is applied on a non-private member",
-			"[This] attribute can be applied only on private members, but was applied on '{0}' property '{1}'",
+			"[This] attribute can be applied only on private members, but was applied on '{0}' member '{1}'",
 			"Accessibility",
 			DiagnosticSeverity.Error,
 			isEnabledByDefault: true);

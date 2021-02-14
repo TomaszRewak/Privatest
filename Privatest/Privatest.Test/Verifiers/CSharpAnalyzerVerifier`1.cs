@@ -11,14 +11,6 @@ namespace Privatest.Test
 	public static partial class CSharpAnalyzerVerifier<TAnalyzer>
 		where TAnalyzer : DiagnosticAnalyzer, new()
 	{
-		/// <inheritdoc cref="AnalyzerVerifier{TAnalyzer, TTest, TVerifier}.Diagnostic()"/>
-		public static DiagnosticResult Diagnostic()
-			=> CSharpAnalyzerVerifier<TAnalyzer, MSTestVerifier>.Diagnostic();
-
-		/// <inheritdoc cref="AnalyzerVerifier{TAnalyzer, TTest, TVerifier}.Diagnostic(string)"/>
-		public static DiagnosticResult Diagnostic(string diagnosticId)
-			=> CSharpAnalyzerVerifier<TAnalyzer, MSTestVerifier>.Diagnostic(diagnosticId);
-
 		/// <inheritdoc cref="AnalyzerVerifier{TAnalyzer, TTest, TVerifier}.Diagnostic(DiagnosticDescriptor)"/>
 		public static DiagnosticResult Diagnostic(DiagnosticDescriptor descriptor)
 			=> CSharpAnalyzerVerifier<TAnalyzer, MSTestVerifier>.Diagnostic(descriptor);

@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Testing;
+﻿using Microsoft.CodeAnalysis.Testing;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VerifyCS = Privatest.Test.CSharpAnalyzerVerifier<Privatest.ThisAnalyzer>;
