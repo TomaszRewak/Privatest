@@ -1,20 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <IsPackable>false</IsPackable>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<IsPackable>true</IsPackable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<Authors>Tomasz Rewak</Authors>
+		<Company />
+		<RepositoryUrl>https://github.com/TomaszRewak/Privatest</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>privatest, private [this], scala, analyzer, accessibility, protection level</PackageTags>
+		<PackageReleaseNotes>1.0.0 - Initial release</PackageReleaseNotes>
+		<Description>Adding scala-like private [this] to C#</Description>
+		<Version>1.0.0</Version>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Copyright>Tomasz Rewak</Copyright>
+		<PackageProjectUrl>https://github.com/TomaszRewak/Privatest</PackageProjectUrl>
+	</PropertyGroup>
 
-    <!-- Avoid ID conflicts with the package project. -->
-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
 
 </Project>

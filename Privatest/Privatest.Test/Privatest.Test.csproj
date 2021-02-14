@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Privatest.CodeFixes\Privatest.CodeFixes.csproj" />
     <ProjectReference Include="..\Privatest\Privatest.csproj" />
   </ItemGroup>
 

@@ -14,7 +14,7 @@ namespace Privatest
 		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
 			DiagnosticId,
 			"The member is inaccesible due to its protection level",
-			"`{0}` is inaccesible due to its protection level. It can only be accessed through the `this` reference in a private scope.",
+			"`{0}` is inaccesible due to its protection level. It can only be accessed by the instance to which it belongs (through the `this` reference).",
 			"Accessibility",
 			DiagnosticSeverity.Error,
 			isEnabledByDefault: true);
