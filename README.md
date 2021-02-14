@@ -17,16 +17,16 @@ To assign an instance-level accessibility mode to a member of a class, decorate 
 ```csharp
 public class Class
 {
-    [This] private int _field;
+   [This] private int _field;
 
-    public void Method(Class other)
-    {
-         _field = 10; // OK
+   public void Method(Class other)
+   {
+      _field = 10; // OK
 
-        other._field = 10; // ERROR
-//      ^^^^^^^^^^^^
-//      `_field` is inaccessible due to its protection level. It can only be accessed by the instance to which it belongs (through the `this` reference).
-    }
+       other._field = 10; // ERROR
+//     ^^^^^^^^^^^^
+//     `_field` is inaccessible due to its protection level. It can only be accessed by the instance to which it belongs (through the `this` reference).
+   }
 }
 ```
 
