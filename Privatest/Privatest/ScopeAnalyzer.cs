@@ -13,7 +13,7 @@ using System.Threading;
 namespace Privatest
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ScopeAnalyzer : DiagnosticAnalyzer
+	internal sealed class ScopeAnalyzer : DiagnosticAnalyzer
 	{
 		public const string DiagnosticId = "Privatest0003";
 
@@ -46,7 +46,7 @@ namespace Privatest
 			if (attribute == null) return;
 			if (attribute.ConstructorArguments.Length == 0) return;
 
-			var scopeName = GetScopeName(context.ContainingSymbol);
+			var scopeName = context.ContainingSymbol.GetScopeName();
 			var targetScopeName = attribute.ConstructorArguments[0].Value as string;
 
 			if (scopeName == targetScopeName) return;
@@ -63,7 +63,7 @@ namespace Privatest
 			if (attribute == null) return;
 			if (attribute.ConstructorArguments.Length == 0) return;
 
-			var scopeName = GetScopeName(context.ContainingSymbol);
+			var scopeName = context.ContainingSymbol.GetScopeName();
 			var targetScopeName = attribute.ConstructorArguments[0].Value as string;
 
 			if (scopeName == targetScopeName) return;
@@ -86,7 +86,7 @@ namespace Privatest
 
 			if (attributeOnSetter != null && attributeOnSetter.ConstructorArguments.Length != 0 && usage.HasFlag(ValueUsageInfo.Write))
 			{
-				var scopeName = GetScopeName(context.ContainingSymbol);
+				var scopeName = context.ContainingSymbol.GetScopeName();
 				var targetScopeName = attributeOnSetter.ConstructorArguments[0].Value as string;
 
 				if (scopeName != targetScopeName)
@@ -98,7 +98,7 @@ namespace Privatest
 
 			if (attributeOnGetter != null && attributeOnGetter.ConstructorArguments.Length != 0 && usage.HasFlag(ValueUsageInfo.Read))
 			{
-				var scopeName = GetScopeName(context.ContainingSymbol);
+				var scopeName = context.ContainingSymbol.GetScopeName();
 				var targetScopeName = attributeOnGetter.ConstructorArguments[0].Value as string;
 
 				if (scopeName != targetScopeName)
@@ -107,17 +107,6 @@ namespace Privatest
 					return;
 				}
 			}
-		}
-
-		private static string GetScopeName(ISymbol symbol)
-		{
-			while (symbol != null && !(symbol.ContainingSymbol is ITypeSymbol))
-				symbol = symbol.ContainingSymbol;
-
-			if (symbol is IMethodSymbol methodSymbol)
-				return methodSymbol.AssociatedSymbol?.Name ?? symbol.Name;
-
-			return null;
 		}
 	}
 }

@@ -42,5 +42,16 @@ namespace Privatest.Extensions
 
 			return string.Join(".", namespaces.Select(n => n.Name).Reverse());
 		}
+
+		public static string GetScopeName(this ISymbol symbol)
+		{
+			while (symbol != null && !(symbol.ContainingSymbol is ITypeSymbol))
+				symbol = symbol.ContainingSymbol;
+
+			if (symbol is IMethodSymbol methodSymbol)
+				return methodSymbol.AssociatedSymbol?.Name ?? symbol.Name;
+
+			return null;
+		}
 	}
 }

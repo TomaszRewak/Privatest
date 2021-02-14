@@ -13,7 +13,7 @@ using System.Threading;
 namespace Privatest
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ThisAnalyzer : DiagnosticAnalyzer
+	internal sealed class ThisAnalyzer : DiagnosticAnalyzer
 	{
 		public const string DiagnosticId = "Privatest0002";
 

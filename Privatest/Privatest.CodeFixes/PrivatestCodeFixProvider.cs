@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Privatest
 {
 	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(PrivatestCodeFixProvider)), Shared]
-	public class PrivatestCodeFixProvider : CodeFixProvider
+	internal sealed class PrivatestCodeFixProvider : CodeFixProvider
 	{
 		public sealed override ImmutableArray<string> FixableDiagnosticIds
 		{

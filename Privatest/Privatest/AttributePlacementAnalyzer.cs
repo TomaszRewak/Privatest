@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 namespace Privatest
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class AttributePlacementAnalyzer : DiagnosticAnalyzer
+	internal sealed class AttributePlacementAnalyzer : DiagnosticAnalyzer
 	{
 		public const string DiagnosticId = "Privatest0001";
 

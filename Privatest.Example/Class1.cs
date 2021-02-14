@@ -35,6 +35,7 @@ namespace Privatest.Example
 		[This(nameof(FrontProperty))]
 		private void Method1()
 		{
+			Property2 = 2;
 			_backField = 3;
 		}
 
