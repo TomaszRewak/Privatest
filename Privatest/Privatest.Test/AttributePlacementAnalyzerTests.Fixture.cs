@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.Testing;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VerifyCS = Privatest.Test.CSharpAnalyzerVerifier<Privatest.AttributePlacementAnalyzer>;
+using VerifyCS = Privatest.Test.CSharpCodeFixVerifier<Privatest.AttributePlacementAnalyzer, Privatest.AttributePlacementCodeFixProvider>;
 
 namespace Privatest.Test
 {
@@ -23,7 +23,17 @@ namespace Privatest.Test
 
 		private Task Verify(string code)
 		{
-			var fullSource = $@"
+			return VerifyCS.VerifyAnalyzerAsync(ComposeFullSource(code), _results.ToArray());
+		}
+
+		private Task Verify(string code, string fixedCode)
+		{
+			return VerifyCS.VerifyCodeFixAsync(ComposeFullSource(code), _results.ToArray(), ComposeFullSource(fixedCode));
+		}
+
+		private string ComposeFullSource(string code)
+		{
+			return $@"
 				using System;
 
 				namespace Privatest
@@ -35,8 +45,6 @@ namespace Privatest.Test
 					{code}
 				}}
 			";
-
-			return VerifyCS.VerifyAnalyzerAsync(fullSource, _results.ToArray());
 		}
 	}
 }

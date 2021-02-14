@@ -108,6 +108,11 @@ namespace Privatest.Test
 				{
 					public int Property { [This] {|#0:get|}; set; }
 				}
+			", @"
+				class Class
+				{
+					public int Property { [This] private get; set; }
+				}
 			");
 		}
 
@@ -120,6 +125,11 @@ namespace Privatest.Test
 				class Class
 				{
 					public int Property { get; [This] {|#0:set|}; }
+				}
+			", @"
+				class Class
+				{
+					public int Property { get; [This] private set; }
 				}
 			");
 		}
@@ -147,6 +157,11 @@ namespace Privatest.Test
 				class Class
 				{
 					[This] public int {|#0:Field|};
+				}
+			", @"
+				class Class
+				{
+					[This] private int Field;
 				}
 			");
 		}
