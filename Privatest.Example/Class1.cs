@@ -7,7 +7,7 @@ namespace Privatest.Example
 	public class Class1
 	{
 		[This] public int _field;
-		private int Property1 { get; [This] set; }
+		public int Property1 { get; [This] private set; }
 		private int Property2 { get; [This(nameof(Method1))] set; }
 
 		[This(nameof(FrontProperty))] private int _backField;

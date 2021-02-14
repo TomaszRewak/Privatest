@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using VerifyCS = Privatest.Test.CSharpCodeFixVerifier<
-	Privatest.PrivatestAnalyzer,
+	Privatest.ThisAnalyzer,
 	Privatest.PrivatestCodeFixProvider>;
 
 namespace Privatest.Test

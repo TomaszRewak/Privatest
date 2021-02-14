@@ -3,17 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Privatest", "Privatest\Privatest\Privatest.csproj", "{85EA352E-E545-454E-9E0F-53A781778A2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Privatest", "Privatest\Privatest\Privatest.csproj", "{85EA352E-E545-454E-9E0F-53A781778A2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Privatest.CodeFixes", "Privatest\Privatest.CodeFixes\Privatest.CodeFixes.csproj", "{3BAA6F99-1CFC-4034-B942-B5A29700F2E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Privatest.CodeFixes", "Privatest\Privatest.CodeFixes\Privatest.CodeFixes.csproj", "{3BAA6F99-1CFC-4034-B942-B5A29700F2E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Privatest.Package", "Privatest\Privatest.Package\Privatest.Package.csproj", "{50A173F4-1D7D-4C7F-9049-FB33C897F7FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Privatest.Package", "Privatest\Privatest.Package\Privatest.Package.csproj", "{50A173F4-1D7D-4C7F-9049-FB33C897F7FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Privatest.Test", "Privatest\Privatest.Test\Privatest.Test.csproj", "{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Privatest.Test", "Privatest\Privatest.Test\Privatest.Test.csproj", "{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Privatest.Vsix", "Privatest\Privatest.Vsix\Privatest.Vsix.csproj", "{5F13D9ED-5C77-45C6-9974-E4B1C8A74502}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Privatest.Example", "Privatest.Example\Privatest.Example.csproj", "{F48B849E-1283-4F3C-B86E-03DCA3D71A07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Privatest.Example", "Privatest.Example\Privatest.Example.csproj", "{F48B849E-1283-4F3C-B86E-03DCA3D71A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +35,6 @@ Global
 		{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD87A186-F0A0-46F2-A35C-3E5970B2DC2D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F13D9ED-5C77-45C6-9974-E4B1C8A74502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F13D9ED-5C77-45C6-9974-E4B1C8A74502}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F13D9ED-5C77-45C6-9974-E4B1C8A74502}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F13D9ED-5C77-45C6-9974-E4B1C8A74502}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F48B849E-1283-4F3C-B86E-03DCA3D71A07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F48B849E-1283-4F3C-B86E-03DCA3D71A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F48B849E-1283-4F3C-B86E-03DCA3D71A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
