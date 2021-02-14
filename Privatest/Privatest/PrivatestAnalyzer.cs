@@ -48,6 +48,7 @@ namespace Privatest
 
 			context.RegisterSymbolAction(AnalyzeAttributePlacement, SymbolKind.Property);
 			context.RegisterSymbolAction(AnalyzeAttributePlacement, SymbolKind.Field);
+			context.RegisterSymbolAction(AnalyzeAttributePlacement, SymbolKind.Method);
 
 			context.RegisterOperationAction(AnalyzeInvocation, OperationKind.Invocation);
 			context.RegisterOperationAction(AnalyzeFieldReference, OperationKind.FieldReference);

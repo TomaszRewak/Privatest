@@ -8,7 +8,7 @@ namespace Privatest.Example
 	{
 		[This] public int _field;
 		private int Property1 { get; [This] set; }
-		public int Property2 { get; [This(nameof(Method1))] set; }
+		private int Property2 { get; [This(nameof(Method1))] set; }
 
 		[This(nameof(FrontProperty))] private int _backField;
 		public int FrontProperty
