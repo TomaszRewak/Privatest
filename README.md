@@ -35,9 +35,12 @@ You can apply the `[This]` attribute on fields, methods and properties (includin
 The `[This]` attribute can only be applied on private members.
 
 ```csharp
-[This] public int Property { get; set; }
-//                ^^^^^^^^
-//                [This] attribute can be applied only on private members, but was applied on 'Public' member 'Property'
+public class Class
+{
+   [This] public int Property { get; set; }
+//                   ^^^^^^^^
+//                   [This] attribute can be applied only on private members, but was applied on 'Public' member 'Property'
+}
 ```
 
 The `[This]` attribute can also be used to limit the accessibility of a member to a specific scope only. It can be useful when working with backing fields, which should be accessed only by the associated properties.
