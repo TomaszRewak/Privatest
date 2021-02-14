@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace Privatest
 {
-	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(PrivatestCodeFixProvider)), Shared]
-	internal sealed class PrivatestCodeFixProvider : CodeFixProvider
+	[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AttributePlacementCodeFixProvider)), Shared]
+	internal sealed class AttributePlacementCodeFixProvider : CodeFixProvider
 	{
 		public sealed override ImmutableArray<string> FixableDiagnosticIds
 		{

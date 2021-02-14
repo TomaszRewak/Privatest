@@ -71,8 +71,8 @@ namespace Privatest
 			if (reference.Instance == null || reference.Instance.Kind == OperationKind.InstanceReference) return;
 
 			var attributeOnProperty = reference.Property.HasAttribute<ThisAttribute>();
-			var attributeOnSetter = reference.Property.SetMethod?.HasAttribute<ThisAttribute>() ?? attributeOnProperty;
-			var attributeOnGetter = reference.Property.GetMethod?.HasAttribute<ThisAttribute>() ?? attributeOnProperty;
+			var attributeOnSetter = (reference.Property.SetMethod?.HasAttribute<ThisAttribute>() ?? false) || attributeOnProperty;
+			var attributeOnGetter = (reference.Property.GetMethod?.HasAttribute<ThisAttribute>() ?? false) || attributeOnProperty;
 
 			if (!attributeOnSetter && !attributeOnGetter) return;
 

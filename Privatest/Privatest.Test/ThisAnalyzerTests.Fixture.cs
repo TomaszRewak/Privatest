@@ -2,21 +2,21 @@
 using Microsoft.CodeAnalysis.Testing;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VerifyCS = Privatest.Test.CSharpAnalyzerVerifier<Privatest.AttributePlacementAnalyzer>;
+using VerifyCS = Privatest.Test.CSharpAnalyzerVerifier<Privatest.ThisAnalyzer>;
 
 namespace Privatest.Test
 {
-	public partial class AttributePlacementTests
+	public partial class ThisAnalyzerTests
 	{
 		private readonly List<DiagnosticResult> _results = new List<DiagnosticResult>();
-		private readonly AttributePlacementAnalyzer _analyzer = new AttributePlacementAnalyzer();
+		private readonly ThisAnalyzer _analyzer = new ThisAnalyzer();
 
-		private void Expect(int location, Accessibility accessibility, string name)
+		private void Expect(int location, string name)
 		{
 			var diagnostic = VerifyCS
 				.Diagnostic(_analyzer.SupportedDiagnostics[0])
 				.WithLocation(location)
-				.WithArguments(new[] { accessibility.ToString(), name });
+				.WithArguments(new[] { name });
 
 			_results.Add(diagnostic);
 		}
@@ -30,10 +30,7 @@ namespace Privatest.Test
 				{{
 					[AttributeUsage(AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Field, AllowMultiple = false)]
 					public sealed class ThisAttribute : Attribute
-					{{
-						public ThisAttribute() {{ }}
-						public ThisAttribute(string methodOrPropertyName) {{ }}
-					}}
+					{{ }}
 
 					{code}
 				}}

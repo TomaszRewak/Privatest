@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 namespace Privatest.Test
 {
 	[TestClass]
-	public partial class AttributePlacementTests
+	public partial class AttributePlacementAnalyzerTests
 	{
 		[TestMethod]
-		public async Task OnPrivateProperty()
+		public async Task OnPrivateProperty_Test()
 		{
 			await Verify(@"
 				class Class
@@ -19,7 +19,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnSetterOfPrivateProperty()
+		public async Task OnSetter_OfPrivateProperty_Test()
 		{
 			await Verify(@"
 				class Class
@@ -30,7 +30,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnGetterOfPrivateProperty()
+		public async Task OnGetter_OfPrivateProperty_Test()
 		{
 			await Verify(@"
 				class Class
@@ -41,7 +41,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnPrivateSetterOfNonPrivateProperty()
+		public async Task OnPrivateSetter_OfNonPrivateProperty_Test()
 		{
 			await Verify(@"
 				class Class
@@ -52,7 +52,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnPrivateGetterOfNonPrivateProperty()
+		public async Task OnPrivateGetter_OfNonPrivateProperty_Test()
 		{
 			await Verify(@"
 				class Class
@@ -63,7 +63,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnPrivateField()
+		public async Task OnPrivateField_Test()
 		{
 			await Verify(@"
 				class Class
@@ -74,7 +74,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnPrivateMethod()
+		public async Task OnPrivateMethod_Test()
 		{
 			await Verify(@"
 				class Class
@@ -86,7 +86,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnNonPrivateProperty()
+		public async Task OnNonPrivateProperty_Test()
 		{
 			Expect(0, Accessibility.Public, "Property");
 
@@ -99,7 +99,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnNonPrivateGetter()
+		public async Task OnNonPrivateGetter_Test()
 		{
 			Expect(0, Accessibility.Public, "get_Property");
 
@@ -112,7 +112,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnNonPrivateSetter()
+		public async Task OnNonPrivateSetter_Test()
 		{
 			Expect(0, Accessibility.Public, "set_Property");
 
@@ -125,7 +125,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnNonPrivateGetterAndSetter()
+		public async Task OnNonPrivateGetterAndSetter_Test()
 		{
 			Expect(0, Accessibility.Public, "get_Property");
 			Expect(1, Accessibility.Public, "set_Property");
@@ -139,7 +139,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnNonPrivateField()
+		public async Task OnNonPrivateField_Test()
 		{
 			Expect(0, Accessibility.Public, "Field");
 
@@ -152,7 +152,7 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
-		public async Task OnNonPrivateMethod()
+		public async Task OnNonPrivateMethod_Test()
 		{
 			Expect(0, Accessibility.Public, "Method");
 
