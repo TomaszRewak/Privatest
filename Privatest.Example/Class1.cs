@@ -14,7 +14,7 @@
 //		public int FrontProperty
 //		{
 //			get => _backField;
-//			set
+//			[This(nameof(Method1))] private set
 //			{
 //				Method1();
 //				_backField = value;
@@ -37,6 +37,8 @@
 //		{
 //			Property2 = 2;
 //			_backField = 3;
+
+//			FrontProperty = 2;
 //		}
 
 //		private void Method2()
@@ -44,6 +46,8 @@
 //			Method1();
 //			Property1 = 4;
 //			_field = 1;
+
+//			FrontProperty = 1;
 
 //			C.a = 3;
 //		}
