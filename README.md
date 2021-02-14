@@ -23,9 +23,9 @@ public class Class
    {
       _field = 10; // OK
 
-       other._field = 10; // ERROR
-//     ^^^^^^^^^^^^
-//     `_field` is inaccessible due to its protection level. It can only be accessed by the instance to which it belongs (through the `this` reference).
+      other._field = 10; // ERROR
+//    ^^^^^^^^^^^^
+//    `_field` is inaccessible due to its protection level. It can only be accessed by the instance to which it belongs (through the `this` reference).
    }
 }
 ```
