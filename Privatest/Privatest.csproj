@@ -12,7 +12,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>privatest, private [this], scala, analyzer, accessibility, protection level</PackageTags>
 		<PackageReleaseNotes>1.0.0 - Initial release</PackageReleaseNotes>
-		<Description>Adding scala-like private [this] to C#</Description>
+		<Description>Adding instance-level accessibility mode to C#</Description>
 		<Version>1.0.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>Tomasz Rewak</Copyright>
