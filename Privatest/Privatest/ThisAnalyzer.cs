@@ -42,7 +42,7 @@ namespace Privatest
 			var operation = context.Operation;
 
 			var invocation = operation as IInvocationOperation;
-			if (invocation.Instance.Kind == OperationKind.InstanceReference) return;
+			if (invocation.Instance == null || invocation.Instance.Kind == OperationKind.InstanceReference) return;
 
 			var attribute = invocation.TargetMethod.GetAttribute<ThisAttribute>();
 			if (attribute == null) return;
@@ -55,7 +55,7 @@ namespace Privatest
 			var operation = context.Operation;
 
 			var reference = operation as IFieldReferenceOperation;
-			if (reference.Instance.Kind == OperationKind.InstanceReference) return;
+			if (reference.Instance == null || reference.Instance.Kind == OperationKind.InstanceReference) return;
 
 			var attribute = reference.Field.GetAttribute<ThisAttribute>();
 			if (attribute == null) return;
@@ -68,7 +68,7 @@ namespace Privatest
 			var operation = context.Operation;
 
 			var reference = operation as IPropertyReferenceOperation;
-			if (reference.Instance.Kind == OperationKind.InstanceReference) return;
+			if (reference.Instance == null || reference.Instance.Kind == OperationKind.InstanceReference) return;
 
 			var attributeOnProperty = reference.Property.HasAttribute<ThisAttribute>();
 			var attributeOnSetter = reference.Property.SetMethod?.HasAttribute<ThisAttribute>() ?? attributeOnProperty;

@@ -2,18 +2,19 @@
 using Microsoft.CodeAnalysis.Testing;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VerifyCS = Privatest.Test.CSharpAnalyzerVerifier<Privatest.ThisAnalyzer>;
+using VerifyCS = Privatest.Test.CSharpAnalyzerVerifier<Privatest.AttributePlacementAnalyzer>;
 
 namespace Privatest.Test
 {
 	public partial class AttributePlacementTests
 	{
 		private readonly List<DiagnosticResult> _results = new List<DiagnosticResult>();
+		private readonly AttributePlacementAnalyzer _analyzer = new AttributePlacementAnalyzer();
 
 		private void Expect(int location, Accessibility accessibility, string name)
 		{
 			var diagnostic = VerifyCS
-				.Diagnostic("Privatest0001")
+				.Diagnostic(_analyzer.SupportedDiagnostics[0])
 				.WithLocation(location)
 				.WithArguments(new[] { accessibility.ToString(), name });
 
@@ -23,8 +24,19 @@ namespace Privatest.Test
 		private Task Verify(string code)
 		{
 			var fullSource = $@"
-				using Privatest;
-				{code}
+				using System;
+
+				namespace Privatest
+				{{
+					[AttributeUsage(AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Field, AllowMultiple = false)]
+					public sealed class ThisAttribute : Attribute
+					{{
+						public ThisAttribute() {{ }}
+						public ThisAttribute(string methodOrPropertyName) {{ }}
+					}}
+
+					{code}
+				}}
 			";
 
 			return VerifyCS.VerifyAnalyzerAsync(fullSource, _results.ToArray());
