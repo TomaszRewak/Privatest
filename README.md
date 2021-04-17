@@ -78,7 +78,7 @@ public class Class
    public int Surname
    {
       get => _name;
-           //^^^^^^^^^^ `_name` is inaccessible due to its protection level. It can only be accessed in `Name` (but is used in `Surname`).
+           //^^^^^ `_name` is inaccessible due to its protection level. It can only be accessed in `Name` (but is used in `Surname`).
    }
 }
 ```
