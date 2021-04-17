@@ -11,9 +11,10 @@
 		<RepositoryUrl>https://github.com/TomaszRewak/Privatest</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>privatest, private [this], scala, analyzer, accessibility, protection level</PackageTags>
-		<PackageReleaseNotes>1.0.0 - Initial release</PackageReleaseNotes>
+		<PackageReleaseNotes>1.1.0 - Adding [BackingField] attribute
+1.0.0 - Initial release</PackageReleaseNotes>
 		<Description>Adding instance-level accessibility mode to C#</Description>
-		<Version>1.0.2</Version>
+		<Version>1.1.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>Tomasz Rewak</Copyright>
 		<PackageProjectUrl>https://github.com/TomaszRewak/Privatest</PackageProjectUrl>
