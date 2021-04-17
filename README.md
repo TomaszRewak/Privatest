@@ -17,16 +17,15 @@ To assign an instance-level accessibility mode to a member of a class, decorate 
 ```csharp
 public class Class
 {
-    [This] private int _field;
+   [This] private int _field;
 
-    public void Method(Class other)
-    {
-         _field = 10; // OK
+   public void Method(Class other)
+   {
+      _field = 10; // OK
 
-        other._field = 10; // ERROR
-//      ^^^^^^^^^^^^
-//      `_field` is inaccesible due to its protection level. It can only be accessed by the instance to which it belongs(through the `this` reference).
-    }
+      other._field = 10; // ERROR
+    //^^^^^^^^^^^^ `_field` is inaccessible due to its protection level. It can only be accessed by the instance to which it belongs (through the `this` reference).
+   }
 }
 ```
 
@@ -35,9 +34,11 @@ You can apply the `[This]` attribute on fields, methods and properties (includin
 The `[This]` attribute can only be applied on private members.
 
 ```csharp
-[This] public int Property { get; set; }
-//                ^^^^^^^^
-//                [This] attribute can be applied only on private members, but was applied on 'Public' member 'Property'
+public class Class
+{
+   [This] public int Property { get; set; }
+                   //^^^^^^^^ [This] attribute can be applied only on private members, but was applied on 'Public' member 'Property'
+}
 ```
 
 The `[This]` attribute can also be used to limit the accessibility of a member to a specific scope only. It can be useful when working with backing fields, which should be accessed only by the associated properties.
@@ -55,8 +56,7 @@ public class Class
    public void Method(Class other)
    {
       _backField = 2;
-//    ^^^^^^^^^^
-//    `_backField` is inaccessible due to its protection level. It can only be accessed in `FrontProperty` (but is used in `Method`).
+    //^^^^^^^^^^ `_backField` is inaccessible due to its protection level. It can only be accessed in `FrontProperty` (but is used in `Method`).
    }
 }
 ```
