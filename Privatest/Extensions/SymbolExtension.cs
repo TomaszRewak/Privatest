@@ -28,6 +28,12 @@ namespace Privatest.Extensions
 				.FirstOrDefault();
 		}
 
+		public static bool TryGetAttribute<T>(this ISymbol type, out AttributeData attribute)
+		{
+			attribute = type.GetAttribute<T>();
+			return attribute != null;
+		}
+
 		public static string GetFullName(this ITypeSymbol symbol)
 		{
 			return $"{symbol.GetNamespace()}.{symbol.Name}";

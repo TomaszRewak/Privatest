@@ -52,13 +52,29 @@ namespace Privatest
 		{
 			var operation = context.Operation;
 			var reference = operation as IFieldReferenceOperation;
-			var attribute = reference.Field.GetAttribute<ThisAttribute>();
 
-			if (attribute == null) return;
-			if (attribute.ConstructorArguments.Length == 0) return;
+			string targetScopeName;
+
+			if (reference.Field.HasAttribute<BackingFieldAttribute>())
+			{
+				targetScopeName = reference.Field.Name;
+
+				if (targetScopeName.StartsWith("_"))
+					targetScopeName = targetScopeName.Substring(1);
+
+				if (targetScopeName.Length > 0 && char.IsLower(targetScopeName[0]))
+					targetScopeName = char.ToUpper(targetScopeName[0]) + targetScopeName.Substring(1);
+			}
+			else if (reference.Field.TryGetAttribute<ThisAttribute>(out var attribute) && attribute.ConstructorArguments.Length > 0)
+			{
+				targetScopeName = attribute.ConstructorArguments[0].Value as string;
+			}
+			else
+			{
+				return;
+			}
 
 			var scopeName = context.ContainingSymbol.GetScopeName();
-			var targetScopeName = attribute.ConstructorArguments[0].Value as string;
 
 			if (scopeName == targetScopeName) return;
 

@@ -74,6 +74,17 @@ namespace Privatest.Test
 		}
 
 		[TestMethod]
+		public async Task OnPrivateBackingField_Test()
+		{
+			await Verify(@"
+				class Class
+				{
+					[BackingField] private int Field;
+				}
+			");
+		}
+
+		[TestMethod]
 		public async Task OnPrivateMethod_Test()
 		{
 			await Verify(@"
@@ -88,7 +99,7 @@ namespace Privatest.Test
 		[TestMethod]
 		public async Task OnNonPrivateProperty_Test()
 		{
-			Expect(0, Accessibility.Public, "Property");
+			Expect(0, Accessibility.Public, "Property", 0);
 
 			await Verify(@"
 				class Class
@@ -101,7 +112,7 @@ namespace Privatest.Test
 		[TestMethod]
 		public async Task OnNonPrivateGetter_Test()
 		{
-			Expect(0, Accessibility.Public, "get_Property");
+			Expect(0, Accessibility.Public, "get_Property", 0);
 
 			await Verify(@"
 				class Class
@@ -119,7 +130,7 @@ namespace Privatest.Test
 		[TestMethod]
 		public async Task OnNonPrivateSetter_Test()
 		{
-			Expect(0, Accessibility.Public, "set_Property");
+			Expect(0, Accessibility.Public, "set_Property", 0);
 
 			await Verify(@"
 				class Class
@@ -137,8 +148,8 @@ namespace Privatest.Test
 		[TestMethod]
 		public async Task OnNonPrivateGetterAndSetter_Test()
 		{
-			Expect(0, Accessibility.Public, "get_Property");
-			Expect(1, Accessibility.Public, "set_Property");
+			Expect(0, Accessibility.Public, "get_Property", 0);
+			Expect(1, Accessibility.Public, "set_Property", 0);
 
 			await Verify(@"
 				class Class
@@ -151,7 +162,7 @@ namespace Privatest.Test
 		[TestMethod]
 		public async Task OnNonPrivateField_Test()
 		{
-			Expect(0, Accessibility.Public, "Field");
+			Expect(0, Accessibility.Public, "Field", 0);
 
 			await Verify(@"
 				class Class
@@ -169,13 +180,31 @@ namespace Privatest.Test
 		[TestMethod]
 		public async Task OnNonPrivateMethod_Test()
 		{
-			Expect(0, Accessibility.Public, "Method");
+			Expect(0, Accessibility.Public, "Method", 0);
 
 			await Verify(@"
 				class Class
 				{
 					[This] public void {|#0:Method|}()
 					{ }
+				}
+			");
+		}
+
+		[TestMethod]
+		public async Task OnNonPrivateBackingField_Test()
+		{
+			Expect(0, Accessibility.Public, "Field", 1);
+
+			await Verify(@"
+				class Class
+				{
+					[BackingField] public int {|#0:Field|};
+				}
+			", @"
+				class Class
+				{
+					[BackingField] private int Field;
 				}
 			");
 		}

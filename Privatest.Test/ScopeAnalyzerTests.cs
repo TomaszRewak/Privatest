@@ -227,16 +227,16 @@ namespace Privatest.Test
 		[TestMethod]
 		public async Task SettingField_InIncorrectScope_Test()
 		{
-			Expect(0, "_filed", "Method1", "Method2");
+			Expect(0, "_field", "Method1", "Method2");
 
 			await Verify(@"
 				class Class
 				{
-					[This(""Method1"")] private int _filed;
+					[This(""Method1"")] private int _field;
 
 					public void Method2(Class other)
 					{
-						{|#0:_filed|} = 2;
+						{|#0:_field|} = 2;
 					}
 				}
 			");
@@ -245,16 +245,16 @@ namespace Privatest.Test
 		[TestMethod]
 		public async Task GettingField_InIncorrectScope_Test()
 		{
-			Expect(0, "_filed", "Method1", "Method2");
+			Expect(0, "_field", "Method1", "Method2");
 
 			await Verify(@"
 				class Class
 				{
-					[This(""Method1"")] private int _filed;
+					[This(""Method1"")] private int _field;
 
 					public void Method2(Class other)
 					{
-						var temp = {|#0:_filed|};
+						var temp = {|#0:_field|};
 					}
 				}
 			");
@@ -320,6 +320,40 @@ namespace Privatest.Test
 					public void Method2(Class other)
 					{
 						{|#0:other.Property|} = 2;
+					}
+				}
+			");
+		}
+
+		[TestMethod]
+		public async Task SettingBackingField_FromFrontProperty_WithMatchingName_Test()
+		{
+			await Verify(@"
+				class Class
+				{
+					[BackingField] private int _name;
+
+					public int Name
+					{
+						set => _name = value;
+					}
+				}
+			");
+		}
+
+		[TestMethod]
+		public async Task SettingBackingField_FromFrontProperty_WithDifferentName_Test()
+		{
+			Expect(0, "_field", "Field", "Property");
+
+			await Verify(@"
+				class Class
+				{
+					[BackingField] private int _field;
+
+					public int Property
+					{
+						set => {|#0:_field|} = value;
 					}
 				}
 			");

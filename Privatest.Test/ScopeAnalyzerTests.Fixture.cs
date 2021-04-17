@@ -34,6 +34,10 @@ namespace Privatest.Test
 						public ThisAttribute(string methodOrPropertyName) {{ }}
 					}}
 
+					[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+					public sealed class BackingFieldAttribute : Attribute
+					{{ }}
+
 					{code}
 				}}
 			";

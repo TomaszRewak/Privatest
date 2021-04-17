@@ -38,8 +38,7 @@ namespace Privatest
 			var invocation = operation as IInvocationOperation;
 			if (invocation.Instance == null || invocation.Instance.Kind == OperationKind.InstanceReference) return;
 
-			var attribute = invocation.TargetMethod.GetAttribute<ThisAttribute>();
-			if (attribute == null) return;
+			if (!invocation.TargetMethod.HasAttribute<ThisAttribute>()) return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.Syntax.GetLocation(), new object[] { invocation.TargetMethod.Name }));
 		}
@@ -51,8 +50,7 @@ namespace Privatest
 			var reference = operation as IFieldReferenceOperation;
 			if (reference.Instance == null || reference.Instance.Kind == OperationKind.InstanceReference) return;
 
-			var attribute = reference.Field.GetAttribute<ThisAttribute>();
-			if (attribute == null) return;
+			if (!reference.Field.HasAttribute<ThisAttribute>()) return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, reference.Syntax.GetLocation(), new object[] { reference.Field.Name }));
 		}
